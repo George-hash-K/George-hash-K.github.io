@@ -24,6 +24,30 @@ def update_blog(commit_mesage='Update blog'):
     origin = repo.remote(name='origin')
     origin.push()
 
+def create_new_blog(title, content, cover_image):
+    cover_image = Path(cover_image)
+    files = len(list(PATH_TO_CONTENT.glob("*.html")))
+    new_title = f"{files+1}.html"
+    path_to_new_content = PATH_TO_CONTENT/new_title
+    shutil.copy(cover_image, PATH_TO_CONTENT)
+
+    if not os.path.exists(path_to_new_content):
+        # write a new html file
+        with open(path_to_new_content, "w") as f:
+            f.write("<!DOCTYPE html>\n")
+            f.write(f"<html>\n<head>\n<title> {title} </title>\n</head>\n")
+            f.write("<body>\n")
+            f.write(f"<img src='{cover_image.name}' alt='Cover Image'><br />\n")
+            # openai generation
+            f.write(content.replace("\n", "<br />\n"))
+            f.write("</body>\n")
+            f.write("</html>")
+            print("Blog created")
+            return path_to_new_content
+
+    else:
+        raise FileExistsError("File already exists, please check again your name. Aborting!")
+
 
 ### MAIN ####
 client = OpenAI(
@@ -36,11 +60,7 @@ PATH_TO_BLOG = PATH_TO_BLOG_REPO.parent
 PATH_TO_CONTENT = PATH_TO_BLOG/"content"
 PATH_TO_CONTENT.mkdir(exist_ok=True,parents=True)
 
-random_text_string = 'jkfdjzzzzzzfjdkj'
-
-with open(PATH_TO_BLOG/"index.html", 'w') as f:
-    f.write(random_text_string)
-
+path_to_new_content = create_new_blog('Test title','aaaaaaa','logo.png')
 update_blog()
 
 # response = client.responses.create(
