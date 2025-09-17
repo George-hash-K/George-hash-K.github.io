@@ -48,6 +48,25 @@ def create_new_blog(title, content, cover_image):
     else:
         raise FileExistsError("File already exists, please check again your name. Aborting!")
 
+def check_for_duplicate_links(path_to_new_content, links):
+    urls = [str(link.get("href")) for link in links]
+    content_path = str(Path(*path_to_new_content.parts[-2:]))
+    return content_path in urls
+
+def write_to_index(path_to_new_content):
+    with open(PATH_TO_BLOG/'index.html') as index:
+        soup = Soup(index.read())
+    links = soup.find_all('a')
+    last_link = links[-1]
+
+    if check_for_duplicate_links(path_to_new_content, links):
+        raise ValueError("Lnk already exists")
+    link_to_new_blog = soup.new_tag("a", href = Path(*path_to_new_content.parts[-2:]))
+    link_to_new_blog.string = path_to_new_content.name.split('.')[0]
+    last_link.insert_after(link_to_new_blog)
+
+    with open(PATH_TO_BLOG/'index.html','w') as f:
+        f.write(str(soup.prettify(formatter='html')))
 
 ### MAIN ####
 client = OpenAI(
