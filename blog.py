@@ -36,7 +36,7 @@ PATH_TO_BLOG = PATH_TO_BLOG_REPO.parent
 PATH_TO_CONTENT = PATH_TO_BLOG/"content"
 PATH_TO_CONTENT.mkdir(exist_ok=True,parents=True)
 
-random_text_string = 'jkfdjfjdkj'
+random_text_string = 'jkfdjzzzzzzfjdkj'
 
 with open(PATH_TO_BLOG/"index.html", 'w') as f:
     f.write(random_text_string)
