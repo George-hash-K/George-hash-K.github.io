@@ -82,6 +82,7 @@ PATH_TO_CONTENT.mkdir(exist_ok=True,parents=True)
 path_to_new_content = create_new_blog('Test title','aaaaaaa','logo.png')
 with open(PATH_TO_BLOG/"index.html") as index:
     soup = Soup(index.read())
+write_to_index(path_to_new_content)
 update_blog()
 
 # response = client.responses.create(
