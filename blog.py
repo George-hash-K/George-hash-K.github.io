@@ -7,7 +7,7 @@ import requests
 import shutil
 from git import Repo
 from pathlib import Path
-
+from bs4 import BeautifulSoup as Soup
 
 load_dotenv()  # take environment variables
 
@@ -62,6 +62,8 @@ PATH_TO_CONTENT.mkdir(exist_ok=True,parents=True)
 
 path_to_new_content = create_new_blog('Test title','aaaaaaa','logo.png')
 update_blog()
+with open(PATH_TO_BLOG/"index.html") as index:
+    soup = Soup(index.read())
 
 # response = client.responses.create(
 #     model="gpt-4o",
