@@ -67,6 +67,32 @@ def write_to_index(path_to_new_content):
 
     with open(PATH_TO_BLOG/'index.html','w') as f:
         f.write(str(soup.prettify(formatter='html')))
+def create_prompt(title):
+    prompt = '''
+    Biography:
+    My name is Jose and I am a python instructor for coding.
+    
+    Blog
+    Title: {}
+    tags: technology, python, coding, ai, machine learning
+    Summary: I talk about what the future of AI could hold for Python
+    Full Text: '''.format(title)
+    return prompt
+
+def dalle2_prompt(title):
+     prompt = f"3d clay render showing {title}"
+     return prompt
+
+def save_image(image_url, file_name):
+    # URL --> pic.png
+    image_res = requests.get(image_url,stream=True)
+    if image_res.status_code == 200:
+        with open(file_name, 'wb') as f:
+            shutil.copyfileobj(image_res.raw,f)
+    else:
+        print('ERROR LOADING IMAGE')
+    return image_res.status_code
+
 
 ### MAIN ####
 client = OpenAI(
@@ -85,11 +111,31 @@ with open(PATH_TO_BLOG/"index.html") as index:
 write_to_index(path_to_new_content)
 update_blog()
 
-# response = client.responses.create(
-#     model="gpt-4o",
-#     input=recipe,
-#     temperature=1,
-#     top_p=1.0,
-#     max_output_tokens=500  # optional, control response length
-# )
+title = "The future of Python and AI"
 
+response = client.responses.create(
+    model="gpt-4o",
+    input=create_prompt(title),
+    temperature=1,
+    top_p=1.0,
+    max_output_tokens=1000  # optional, control response length
+)
+blog_content = response.output[0].content[0].text
+image_prompt = dalle2_prompt(title)
+image_response = client.images.generate(
+    model="dall-e-3",  # or "dall-e-3"
+    prompt=image_prompt,
+    n=1,
+    size="1024x1024"
+)
+
+# Get the image URL
+image_url = image_response.data[0].url
+print(image_url)
+save_image(image_url,file_name='title2.png')
+
+path_to_new_content = create_new_blog(title,blog_content,'title2.png')
+
+write_to_index(path_to_new_content)
+
+update_blog()
