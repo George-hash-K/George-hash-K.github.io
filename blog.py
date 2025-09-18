@@ -67,6 +67,7 @@ def write_to_index(path_to_new_content):
 
     with open(PATH_TO_BLOG/'index.html','w') as f:
         f.write(str(soup.prettify(formatter='html')))
+
 def create_prompt(title):
     prompt = '''
     Biography:
@@ -105,12 +106,12 @@ PATH_TO_BLOG = PATH_TO_BLOG_REPO.parent
 PATH_TO_CONTENT = PATH_TO_BLOG/"content"
 PATH_TO_CONTENT.mkdir(exist_ok=True,parents=True)
 
-# with open(PATH_TO_BLOG/"index.html") as index:
-#     soup = Soup(index.read())
-# write_to_index(path_to_new_content)
-# update_blog()
+with open(PATH_TO_BLOG/"index.html") as index:
+    soup = Soup(index.read())
 
-title = "The future of Python and AI"
+
+
+title = "The future of Scuba diving and AI"
 
 response = client.responses.create(
     model="gpt-4o",
@@ -131,9 +132,9 @@ image_response = client.images.generate(
 # Get the image URL
 image_url = image_response.data[0].url
 print(image_url)
-save_image(image_url,file_name='title3.png')
+save_image(image_url,file_name='title4.png')
 
-path_to_new_content = create_new_blog(title,blog_content,'title3.png')
+path_to_new_content = create_new_blog(title,blog_content,'title4.png')
 
 write_to_index(path_to_new_content)
 
