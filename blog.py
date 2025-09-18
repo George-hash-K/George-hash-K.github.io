@@ -60,7 +60,7 @@ def write_to_index(path_to_new_content):
     last_link = links[-1]
 
     if check_for_duplicate_links(path_to_new_content, links):
-        raise ValueError("Lnk already exists")
+        raise ValueError("Link already exists")
     link_to_new_blog = soup.new_tag("a", href = Path(*path_to_new_content.parts[-2:]))
     link_to_new_blog.string = path_to_new_content.name.split('.')[0]
     last_link.insert_after(link_to_new_blog)
@@ -70,17 +70,17 @@ def write_to_index(path_to_new_content):
 def create_prompt(title):
     prompt = '''
     Biography:
-    My name is Jose and I am a python instructor for coding.
+    My name is Jose and I am a scuba instructor  .
     
     Blog
     Title: {}
-    tags: technology, python, coding, ai, machine learning
-    Summary: I talk about what the future of AI could hold for Python
+    tags: scuba, diving
+    Summary: I talk about what the future of scuba diving could be
     Full Text: '''.format(title)
     return prompt
 
 def dalle2_prompt(title):
-     prompt = f"3d clay render showing {title}"
+     prompt = f"3d stop motion showing {title}"
      return prompt
 
 def save_image(image_url, file_name):
@@ -105,11 +105,10 @@ PATH_TO_BLOG = PATH_TO_BLOG_REPO.parent
 PATH_TO_CONTENT = PATH_TO_BLOG/"content"
 PATH_TO_CONTENT.mkdir(exist_ok=True,parents=True)
 
-path_to_new_content = create_new_blog('Test title','aaaaaaa','logo.png')
-with open(PATH_TO_BLOG/"index.html") as index:
-    soup = Soup(index.read())
-write_to_index(path_to_new_content)
-update_blog()
+# with open(PATH_TO_BLOG/"index.html") as index:
+#     soup = Soup(index.read())
+# write_to_index(path_to_new_content)
+# update_blog()
 
 title = "The future of Python and AI"
 
@@ -132,9 +131,9 @@ image_response = client.images.generate(
 # Get the image URL
 image_url = image_response.data[0].url
 print(image_url)
-save_image(image_url,file_name='title2.png')
+save_image(image_url,file_name='title3.png')
 
-path_to_new_content = create_new_blog(title,blog_content,'title2.png')
+path_to_new_content = create_new_blog(title,blog_content,'title3.png')
 
 write_to_index(path_to_new_content)
 
